@@ -1,3 +1,4 @@
+### tiles on the Board ###
 class Tile
   attr_accessor :left, :right, :top, :bot, :cords, :draw_cords
 
@@ -9,5 +10,4 @@ class Tile
     @right = nil
     @draw_cords = { x: 0, y: 0 }
   end
-
 end

@@ -1,33 +1,24 @@
 require 'ruby2d'
-class DrawBoard
-  attr_accessor :white_positions, :black_positions, :tileset, :knight
+require_relative 'config'
 
-  def initialize(white, black)
+### Draw Board Class drawing the Board on the screen ###
+class DrawBoard
+  attr_accessor :white_positions, :black_positions, :knight
+
+  def initialize(white, black, side_length = 8)
     @white_positions = white
     @black_positions = black
-    @tileset = Tileset.new(
-      'img/tiles.png',
-      tile_width: 64,
-      tile_height: 64
-    )
-    @tileset.define_tile('white_tile', 1, 1)
-    @tileset.define_tile('black_tile', 2, 1)
-    @tileset.set_tile('white_tile', @white_positions)
-    @tileset.set_tile('black_tile', @black_positions)
-    # @knight = Knight.new
-    
+    @side_length = side_length
+    draw_board
   end
 
-  def show_white_positions
-    @white_positions.each do |tile|
-      puts tile.draw_cords
+  def draw_board
+    tile_size = Config::WINDOW_SIZE / @side_length
+    @white_positions.each do |pos|
+      Square.new(x: pos[:x], y: pos[:y], size: tile_size, color: 'white')
+    end
+    @black_positions.each do |pos|
+      Square.new(x: pos[:x], y: pos[:y], size: tile_size, color: 'black')
     end
   end
-
-  def show_black_positions
-    @black_positions.each do |tile|
-      puts tile.draw_cords
-    end
-  end
-
 end

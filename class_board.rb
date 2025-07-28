@@ -1,52 +1,61 @@
 require_relative 'class_tile'
 require 'ruby2d'
 
-
+### Board Class storing all Tiles and some Functions to access them###
 class Board
-  attr_accessor :topleft, :tiles, :white_positions, :black_positions
+  attr_accessor :topleft, :tiles, :white_positions, :black_positions, :grid
+  attr_reader :side_length, :tile_size
 
   def initialize
     @topleft = nil
+    @grid = nil
     @tiles = []
     @white_positions = []
     @black_positions = []
+    @side_length = nil
+    @tile_size = nil
   end
 
   ### Setup Board ###
-  def setup(num, current = @topleft)
+  def setup(num)
     get_cords = lambda do |num|
       side_length = Math.sqrt(num)
+      @side_length = side_length.to_i
       return side_length.to_i if side_length == side_length.to_i
 
-      raise 'Error: invalid input'
+      raise 'Error: invalid input, try 4, 16, 64, 256'
     end
     side_length = get_cords.call(num)
+    @tile_size = Config::WINDOW_SIZE / @side_length
 
-    grid = Array.new(side_length) { Array.new(side_length) }
-    (0...side_length).each do |row| # #Tiles erstellen und Cords festlegen
+    # tiles erstellen und Cords festlegen
+    @grid = Array.new(side_length) { Array.new(side_length) }
+    (0...side_length).each do |row|
       (0...side_length).each do |col|
         tile = Tile.new
         tile.cords = [row, col]
-        grid[row][col] = tile
+        @grid[row][col] = tile
         @tiles << tile
       end
     end
 
-    (0...side_length).each do |row| # #Tiles verlinken
+    # tiles verlinken
+    (0...side_length).each do |row|
       (0...side_length).each do |col|
-        tile = grid[row][col]
-        tile.top = grid[row - 1][col] if row > 0
-        tile.bot = grid[row + 1][col] if row < side_length - 1
-        tile.left = grid[row][col - 1] if col > 0
-        tile.right = grid[row][col + 1] if col < side_length - 1
+        tile = @grid[row][col]
+        tile.top = @grid[row - 1][col] if row > 0
+        tile.bot = @grid[row + 1][col] if row < side_length - 1
+        tile.left = @grid[row][col - 1] if col > 0
+        tile.right = @grid[row][col + 1] if col < side_length - 1
       end
     end
 
-    side_length.times do |row| ## Tile draw_cords festlegen
+    # tile draw_cords festlegen
+    side_length.times do |row|
       side_length.times do |col|
-        x = col * 64
-        y = row * 64
-        grid[row][col].draw_cords = { x: x, y: y }
+        x = col * (512 / side_length)
+        y = row * (512 / side_length)
+        @grid[row][col].draw_cords = { x: x, y: y }
         if (row + col).even?
           @white_positions << { x: x, y: y }
         else
@@ -54,13 +63,20 @@ class Board
         end
       end
     end
-    p "setup done with #{white_positions.length} white tiles and #{black_positions.length} black tiles"
-    @topleft = grid[0][0]
+    p "Setup done with #{white_positions.length} white Tiles and #{black_positions.length} black tiles"
+    @topleft = @grid[0][0]
+  end
+
+  def get_tile(cords)
+    row, col = cords
+    return nil if row.nil? || col.nil? || row < 0 || col < 0
+
+    @grid.dig(row, col)
   end
 
   def find_tile(cords)
     @tiles.each do |tile|
-      if tile.draw_cords[:x] < cords[:x] && tile.draw_cords[:x]+64 > cords[:x] && tile.draw_cords[:y] < cords[:y] && tile.draw_cords[:y]+64 > cords[:y]
+      if tile.draw_cords[:x] < cords[:x] && tile.draw_cords[:x] + (512 / @side_length) > cords[:x] && tile.draw_cords[:y] < cords[:y] && tile.draw_cords[:y] + (512 / @side_length) > cords[:y]
         return tile
       end
     end
@@ -95,6 +111,5 @@ class Board
     @black_positions.each do |tile|
       puts tile.draw_cords
     end
-  end 
-
+  end
 end
