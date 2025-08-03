@@ -36,12 +36,15 @@ on :mouse_down do |event|
   target_tile = test.find_tile(cords)
   if knight.move_legal?(target_tile.cords)
     knight.move(target_tile)
+    p "Moved to #{target_tile.cords} in 1 move"
   else
     path = knight.find_path(target_tile, test)
     if path
-      puts "Path found in #{path.length} moves:"
       path.each { |tile| p tile.cords }
+      p "Path found in #{path.length} moves:"
       knight.move(target_tile) # Move the knight to the target
+    else
+      p 'No path found'
     end
   end
 end

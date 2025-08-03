@@ -1,4 +1,4 @@
-### tiles on the Board ###
+### tiles on the board ###
 class Tile
   attr_accessor :left, :right, :top, :bot, :cords, :draw_cords
 

@@ -36,10 +36,11 @@ class Knight
 
   def find_path(target_tile, board)
     start_tile = @current_tile
-    # que for bfs, storing path tiles
+    # que for path tiles
     queue = [[start_tile]]
     # keep track of visited tiles
     visited = { start_tile => true }
+    # breadth-first search (BFS)
     while queue.any?
       current_path = queue.shift
       last_tile = current_path.last
