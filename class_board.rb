@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative 'class_tile'
 require 'ruby2d'
+require_relative 'config'
 
 ### board class storing all tiles and some functions to access them###
 class Board
@@ -36,16 +39,12 @@ class Board
         tile.cords = [row, col]
         @grid[row][col] = tile
         @tiles << tile
-      end
-    end
 
-    # tiles verlinken
-    (0...side_length).each do |row|
-      (0...side_length).each do |col|
+        # tiles verlinken
         tile = @grid[row][col]
-        tile.top = @grid[row - 1][col] if row > 0
+        tile.top = @grid[row - 1][col] if row.positive?
         tile.bot = @grid[row + 1][col] if row < side_length - 1
-        tile.left = @grid[row][col - 1] if col > 0
+        tile.left = @grid[row][col - 1] if col.positive?
         tile.right = @grid[row][col + 1] if col < side_length - 1
       end
     end
@@ -53,8 +52,8 @@ class Board
     # tile draw_cords festlegen
     side_length.times do |row|
       side_length.times do |col|
-        x = col * (512 / side_length)
-        y = row * (512 / side_length)
+        x = col * (Config::WINDOW_SIZE / side_length)
+        y = row * (Config::WINDOW_SIZE / side_length)
         @grid[row][col].draw_cords = { x: x, y: y }
         if (row + col).even?
           @white_positions << { x: x, y: y }
@@ -69,14 +68,14 @@ class Board
 
   def get_tile(cords)
     row, col = cords
-    return nil if row.nil? || col.nil? || row < 0 || col < 0
+    return nil if row.nil? || col.nil? || row.negative? || col.negative?
 
     @grid.dig(row, col)
   end
 
   def find_tile(cords)
     @tiles.each do |tile|
-      if tile.draw_cords[:x] < cords[:x] && tile.draw_cords[:x] + (512 / @side_length) > cords[:x] && tile.draw_cords[:y] < cords[:y] && tile.draw_cords[:y] + (512 / @side_length) > cords[:y]
+      if tile.draw_cords[:x] < cords[:x] && tile.draw_cords[:x] + (Config::WINDOW_SIZE / @side_length) > cords[:x] && tile.draw_cords[:y] < cords[:y] && tile.draw_cords[:y] + (Config::WINDOW_SIZE / @side_length) > cords[:y]
         return tile
       end
     end

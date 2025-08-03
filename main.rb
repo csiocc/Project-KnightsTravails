@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'class_tile'
 require_relative 'class_drawboard'
 require_relative 'class_board'
@@ -74,8 +76,10 @@ on :mouse_down do |event|
       width: 3, color: color, z: 10
     )
   end
+  next if target_tile.class == Array
 
   if knight.move_legal?(target_tile.cords)
+
     draw_line.call(start_tile, target_tile, 'red')
     knight.move(target_tile)
     p "Moved to #{target_tile.cords} in 1 move"

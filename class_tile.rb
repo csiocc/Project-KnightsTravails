@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ### tiles on the board ###
 class Tile
   attr_accessor :left, :right, :top, :bot, :cords, :draw_cords

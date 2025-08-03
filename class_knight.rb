@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'ruby2d'
 
-### Knight Class and Functions to Move, and Path finding###
+### knight class and functions to move, and path finding###
 class Knight
   attr_reader :sprite
   attr_accessor :current_tile
