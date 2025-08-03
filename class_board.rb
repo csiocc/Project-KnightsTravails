@@ -1,7 +1,7 @@
 require_relative 'class_tile'
 require 'ruby2d'
 
-### Board Class storing all Tiles and some Functions to access them###
+### board class storing all tiles and some functions to access them###
 class Board
   attr_accessor :topleft, :tiles, :white_positions, :black_positions, :grid
   attr_reader :side_length, :tile_size
@@ -16,7 +16,7 @@ class Board
     @tile_size = nil
   end
 
-  ### Setup Board ###
+  ### setup board ###
   def setup(num)
     get_cords = lambda do |num|
       side_length = Math.sqrt(num)

@@ -1,7 +1,7 @@
 require 'ruby2d'
 require_relative 'config'
 
-### Draw Board Class drawing the Board on the screen ###
+### draw board class drawing the board on the screen ###
 class DrawBoard
   attr_accessor :white_positions, :black_positions, :knight
 
